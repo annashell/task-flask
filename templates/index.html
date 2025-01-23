@@ -7,20 +7,29 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Добавление предложений в базу</title>
 </head>
 <body>
-<div>
-    <form action="/add_syntagma" method="post" enctype="multipart/form-data">
-        <input type="text" name="text"/>
-        <input type="submit" value="Добавить предложение">
-    </form>
-</div>
-<div>
-    <form action="/find_word" method="post" enctype="multipart/form-data">
-        <input type="text" name="word"/>
-        <input type="submit" value="Найти слово">
-    </form>
+<div class="container">
+    <div class="row">
+        <div class="descr-div">Добавить предложение в базу данных:</div>
+        <div>
+            <form action="/add_syntagma" method="post" enctype="multipart/form-data">
+                <input type="text" name="text"/>
+                <input type="submit" value="Добавить предложение">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="descr-div">Найти слово в базе данных:</div>
+        <div>
+            <form action="/find_word" method="post" enctype="multipart/form-data">
+                <input type="text" name="word"/>
+                <input type="submit" value="Найти слово">
+            </form>
+        </div>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

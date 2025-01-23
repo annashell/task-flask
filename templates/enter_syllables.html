@@ -10,6 +10,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <script>
         const words = {{ words | tojson }};
@@ -20,12 +21,14 @@
 
             words.forEach((str, index) => {
                 const new_div = document.createElement('span')
+                new_div.className = "span-syll"
                 const new_content = document.createTextNode(str);
                 new_div.appendChild(new_content);
                 form.appendChild(new_div);
 
                 // Создаем новый элемент input
                 const input = document.createElement('input');
+                input.className = "input-syll"
                 input.type = 'text';
                 input.name = `input_${index}`; // Задаем имя для поля
                 input.value = str; // Устанавливаем значение
@@ -41,11 +44,19 @@
     </script>
 </head>
 <body>
-<form id="add-syllables-form" action="/add_syllables" method="post" enctype="multipart/form-data">
-    <!-- Здесь будет динамически добавляться input -->
-</form>
-<button type="submit" form="add-syllables-form">Сохранить слоги и вернуться на начальную страницу</button>
-<div id="success-message"></div>
+<div class="container">
+    <div>
+        <form id="add-syllables-form" action="/add_syllables" method="post" enctype="multipart/form-data">
+            <!-- Здесь будет динамически добавляться input -->
+        </form>
+    </div>
+    <div class="buttons-row">
+        <button class="syll-button" type="submit" form="add-syllables-form">Сохранить слоги и вернуться на начальную страницу</button>
+        <form action="/">
+            <input class="syll-button" type="submit" value="Вернуться на начальную страницу без сохранения"/>
+        </form>
+    </div>
+</div>
 <script>
     //
     const send_button = document.querySelector("#btn")

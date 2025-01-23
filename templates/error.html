@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Ошибка</title>
-        <!-- Required meta tags -->
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
 </head>
 <body>
-<h1>Ошибка!</h1>
-<div>{{error_text}}</div>
-<form action="/">
-    <input type="submit" value="Вернуться на начальную страницу" />
-</form>
+<div class="container">
+    <h1>Ошибка!</h1>
+    <div class="descr-div">{{error_text}}</div>
+    <form  class="descr-div" action="/">
+        <input type="submit" value="Вернуться на начальную страницу"/>
+    </form>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

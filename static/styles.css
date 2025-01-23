@@ -6,7 +6,32 @@
     margin: 20px;
 }
 
+.descr-div {
+    margin: 20px 0 0 0;
+}
+
 .output-div-header {
     margin: 30px;
-    font-size: 1.5rem
+    font-size: 1.5rem;
+}
+
+.back-button {
+    margin: 30px;
+}
+
+.syll-button {
+    margin-right: 20px;
+    height: 100%;
+    padding: 10px;
+}
+
+.span-syll {
+    display: inline-block;
+    width: 30%;
+    margin: 20px 0 0 0;
+}
+
+.buttons-row {
+    display: flex;
+    margin: 20px 0 0 0;
 }
