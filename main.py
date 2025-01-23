@@ -24,14 +24,18 @@ def allowed_file(filename: str):
 
 @app.route('/add_syntagma', methods=['POST'])
 def add_syntagma():
+    """
+    Добавляет новое предложение и входящие в него слова в базу.
+    :return:
+    """
     if request.method == 'POST':
         text = request.values['text']
         if len(text.strip()) > 0:
             db_name = "synt_syllab.db"
-            if not os.path.exists(db_name):
+            if not os.path.exists(db_name): # база еще не была создана
                 init_database(db_name)
             synt_index = add_syntagma_to_db(text, db_name)
-            cleaned_string = re.sub(r'[^А-Яа-яЁё\s]', '', text)
+            cleaned_string = re.sub(r'[^А-Яа-яЁё\s]', '', text) # удаляем все кроме кириллицы и пробелов из строки
             if len(cleaned_string) == 0:
                 return render_template("error.html", error_text="Текст неверного формата")
             words = cleaned_string.split()
@@ -43,11 +47,15 @@ def add_syntagma():
 
 @app.route('/add_syllables', methods=['POST'])
 def add_syllables():
+    """
+    Добавляет слоги слова в базу.
+    :return:
+    """
     if request.method == 'POST':
         values = request.values
-        if len(values) > 0 and "" not in list(values.values()):
+        if len(values) > 0 and "" not in list(values.values()): # проверка, что при вводе слогов не было пустых полей
             db_name = "synt_syllab.db"
-            if not os.path.exists(db_name):
+            if not os.path.exists(db_name): # база еще не была создана
                 return render_template("error.html", error_text="Не было введено ни одного предложения!")
             add_syllables_to_db(values, db_name)
             return render_template("index.html")
@@ -57,11 +65,15 @@ def add_syllables():
 
 @app.route('/find_word', methods=['POST'])
 def find_word():
+    """
+    Находит в базе введенное слова.
+    :return:
+    """
     if request.method == 'POST':
         word = request.values['word']
         if len(word.strip().split()) == 1:
             db_name = "synt_syllab.db"
-            if not os.path.exists(db_name):
+            if not os.path.exists(db_name): # база еще не была создана
                 return render_template("error.html", error_text="Не было введено ни одного предложения!")
             words, syllables, sentences = find_word_in_db(word.strip(), db_name)
             if len(words) == 0:

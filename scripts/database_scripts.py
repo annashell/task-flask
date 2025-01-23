@@ -4,6 +4,10 @@ from flask import render_template
 
 
 def create_init_sql_query():
+    """
+    Создает sql запрос для создания БД
+    :return:
+    """
     query: str = '''CREATE TABLE syntagma_units (
                                     syntagma_id INTEGER PRIMARY KEY,
                                     syntagma_text TEXT NOT NULL);
@@ -26,6 +30,10 @@ def create_init_sql_query():
 
 
 def init_database(db_name):
+    """
+    Создает БД
+    :return:
+    """
     try:
         sqlite_connection = sqlite3.connect(db_name)
         cursor = sqlite_connection.cursor()
@@ -51,6 +59,10 @@ def init_database(db_name):
 
 
 def add_syntagma_to_db(text, db_name):
+    """
+    Добавляет введенную синтагму в БД
+    :return:
+    """
     connection = sqlite3.connect(db_name)
     cursor = connection.cursor()
     insert_query = f"""INSERT INTO syntagma_units (syntagma_id, syntagma_text)  VALUES  (?, ?)"""
@@ -58,6 +70,7 @@ def add_syntagma_to_db(text, db_name):
 
     row_count = cursor.execute(get_table_size_query).fetchone()
 
+    # считаем уже добавленные в базу синтагмы для задания id
     if row_count is not None:
         number_of_syntagmas = row_count[0]
     else:
@@ -74,12 +87,17 @@ def add_syntagma_to_db(text, db_name):
 
 
 def add_words_to_db(words, db_name, synt_index):
+    """
+    Добавляет слова введенной синтагмы в БД
+    :return:
+    """
     connection = sqlite3.connect(db_name)
     cursor = connection.cursor()
     get_table_size_query = f"""SELECT COUNT(*) FROM words_units"""
 
     row_count = cursor.execute(get_table_size_query).fetchone()
 
+    # считаем уже добавленные в базу слова для задания id
     if row_count is not None:
         number_of_words = row_count[0]
     else:
@@ -99,12 +117,17 @@ def add_words_to_db(words, db_name, synt_index):
 
 
 def add_syllables_to_db(words, db_name):
+    """
+        Добавляет введенные слоги в БД
+        :return:
+    """
     connection = sqlite3.connect(db_name)
     cursor = connection.cursor()
     get_table_size_query = f"""SELECT COUNT(*) FROM syllable_units"""
 
     row_count = cursor.execute(get_table_size_query).fetchone()
 
+    # считаем уже добавленные в базу слоги для задания id
     if row_count is not None:
         number_of_syllables = row_count[0]
     else:
@@ -115,6 +138,7 @@ def add_syllables_to_db(words, db_name):
     for i, word in enumerate(dict(words).values()):
         word_joined = word.replace("-", "")
         get_word_index_query = f"""SELECT word_id FROM words_units as wu WHERE wu.word_text='{word_joined}'"""
+        # находим индекс слова, к которому относится слог, в БД
         word_count = cursor.execute(get_word_index_query).fetchone()[-1]
 
         insert_query = f"""INSERT INTO syllable_units (syllable_id, word_index, pos_in_word, syllable_text)  VALUES  (?, ?, ?, ?)"""
@@ -132,6 +156,10 @@ def add_syllables_to_db(words, db_name):
 
 
 def find_word_in_db(word, db_name):
+    """
+        Ищет слово в БД, выводит его разбиение на слоги и соответствующее предложение
+        :return:
+    """
     words, syllables, sentences = [], [], []
 
     connection = sqlite3.connect(db_name)
@@ -149,6 +177,7 @@ def find_word_in_db(word, db_name):
             sentences.append(sentence)
             syllables_db = cursor.execute(get_syllables_query).fetchall()
 
+            # объединяем слоги в слова через - для вывода на экран
             new_word = ""
             for (syl_id, w_ind, pos, syl_text) in syllables_db:
                 if pos == 0:
