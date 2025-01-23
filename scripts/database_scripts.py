@@ -132,25 +132,33 @@ def add_syllables_to_db(words, db_name):
 
 
 def find_word_in_db(word, db_name):
+    words, syllables, sentences = [], [], []
+
     connection = sqlite3.connect(db_name)
     cursor = connection.cursor()
     get_words_query = f"""SELECT * FROM words_units as wu WHERE wu.word_text='{word}'"""
 
-    row_count = cursor.execute(get_table_size_query).fetchone()
+    words_ = cursor.execute(get_words_query).fetchall()
+    if words_ is not None:
+        words = words_
+        for (word_id, word_text, syntagma_index) in words_:
+            get_syntagma_query = f"""SELECT * FROM syntagma_units as su WHERE su.syntagma_id='{syntagma_index}'"""
+            get_syllables_query = f"""SELECT * FROM syllable_units as su WHERE su.word_index='{word_id}'"""
 
-    if row_count is not None:
-        number_of_words = row_count[0]
-    else:
-        number_of_words = 0
+            sentence = cursor.execute(get_syntagma_query).fetchone()[1]
+            sentences.append(sentence)
+            syllables_db = cursor.execute(get_syllables_query).fetchall()
 
-    for i, word in enumerate(words):
-        insert_query = f"""INSERT INTO words_units (word_id, word_text, syntagma_index)  VALUES  (?, ?, ?)"""
-
-        data = [
-            (number_of_words + i, word, synt_index)
-        ]
-
-        cursor.executemany(insert_query, data)
-        connection.commit()
+            new_word = ""
+            for (syl_id, w_ind, pos, syl_text) in syllables_db:
+                if pos == 0:
+                    if len(new_word) > 0:
+                        syllables.append(new_word)
+                    new_word = syl_text
+                else:
+                    new_word += "-" + syl_text
+            if len(new_word) > 0:
+                syllables.append(new_word)
 
     cursor.close()
+    return words, syllables, sentences
